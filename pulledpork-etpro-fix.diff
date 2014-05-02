@@ -1,0 +1,95 @@
+diff -uNr pulledpork-0.6.1/pulledpork.pl pulledpork-0.6.1-dev/pulledpork.pl
+--- pulledpork-0.6.1/pulledpork.pl	2011-04-01 10:57:50.000000000 -0500
++++ pulledpork-0.6.1-dev/pulledpork.pl	2012-07-12 11:58:02.000000000 -0500
+@@ -49,7 +49,7 @@
+ my ( $Snort_config, $Snort_path, $Textonly,   $grabonly,    $ips_policy, );
+ my ( $pid_path,     $SigHup,     $NoDownload, $sid_msg_map, @base_url );
+ my ( $local_rules,  $arch,       $docs,       @records,     $enonly );
+-my ( $rstate, $keep_rulefiles, $rule_file_path, $prefix );
++my ( $rstate, $keep_rulefiles, $rule_file_path, $prefix, $Engine, $SuriVersion);
+ 
+ # verbose and quiet control print()
+ # default values if not set otherwise in getopt
+@@ -172,6 +172,8 @@
+    -V Print Version and exit
+    -v Verbose mode, you know.. for troubleshooting and such nonsense.
+    -vv EXTRA Verbose mode, you know.. for in-depth troubleshooting and other such nonsense.
++   -z Engine suricata or snort (defaults to snort)
++   -Z Suricata Version (no effect if engine is snort)
+ __EOT
+ 
+     exit(0);
+@@ -435,12 +437,13 @@
+           getstore( "https://www.snort.org/reg-rules/$rule_file.md5/$oinkcode",
+             $temp_path . $rule_file . ".md5" );
+     }
+-    elsif ( $base_url =~ /emergingthreats\.net/i ) {
++    elsif ( $base_url =~ /emergingthreats(pro\.com|\.net)/i ) {
+         $getrules_md5 = getstore(
+             "$base_url/$rule_file" . ".md5",
+             $temp_path . $rule_file . ".md5"
+         );
+     }
++
+     if ( $getrules_md5 == 403 ) {
+         print
+ "\tA 403 error occurred, please wait for the 15 minute timeout\n\tto expire before trying again or specify the -n runtime switch\n",
+@@ -1435,6 +1438,8 @@
+     "u=s"    => \@base_url,
+     "V!"     => sub { Version() },
+     "v+"     => \$Verbose,
++    "z=s"    => \$Engine,
++    "Z=s"    => \$SuriVersion,
+     "help|?" => sub { Help() }
+ );
+ 
+@@ -1587,6 +1592,22 @@
+     $ips_policy = "Disabled";
+ }
+ 
++if ( !$Engine ) {
++    if ( exists $Config_info{'engine'} ) {
++        $Engine = $Config_info{'engine'};
++    } 
++    else { 
++        $Engine = 'snort';
++    } 
++}
++
++croak("Unknown IDS Engine $Engine please specify an engine of \'snort\' or \'suricata\' in your pulledpork.conf\n")
++      unless $Engine =~ /^(snort|suricata)$/; 
++
++if ( $Engine eq 'suricata' && ( !$SuriVersion ) && ( $Config_info{'suricata_version'} ) ) {
++    $SuriVersion = ( $Config_info{'suricata_version'} );
++}
++
+ if ( $Verbose && !$Quiet ) {
+     print "MISC (CLI and Autovar) Variable Debug:\n";
+     if ($arch)           { print "\tarch Def is: $arch\n"; }
+@@ -1742,12 +1763,21 @@
+                     $rule_file = "snortrules-snapshot-$Snortv.tar.gz";
+                 }
+             }
+-            elsif ( $base_url =~ /emergingthreats.net/ ) {
++            elsif ( $base_url =~ /emergingthreats(pro\.com|\.net)/ ) {
+                 $prefix = "ET-";
+-                my $Snortv = $Snort;
+-                $Snortv =~ s/(?<=\d\.\d\.\d)\.\d//;
+-                $base_url .= "$oinkcode/snort-$Snortv/";
+-
++                if ( $Engine eq 'snort' ) {
++                    my $Snortv = $Snort;
++                    $Snortv =~ s/(?<=\d\.\d\.\d)\.\d//;
++                    $base_url .= "$oinkcode/snort-$Snortv/";
++                }
++                elsif ( $Engine eq 'suricata' ){
++                    if ( !$SuriVersion ) {
++                        $base_url .= "$oinkcode/suricata/";
++                    } 
++                    else {
++                        $base_url .= "$oinkcode/suricata-$SuriVersion/";
++                    }
++                }
+                 #$Textonly = 1;
+             }
+ 	    
