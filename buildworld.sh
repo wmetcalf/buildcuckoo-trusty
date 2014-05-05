@@ -1,6 +1,6 @@
 #!/bin/sh
 sudo apt-get update -y && sudo apt-get upgrade -y
-sudo apt-get install -y unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev
+sudo apt-get install -y screen unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev libswitch-perl
 
 sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump
 sudo pip install bottle pefile django pycrypto
@@ -50,7 +50,7 @@ sudo mkdir -p /usr/local/suricata/etc/
 sudo mkidr -p /usr/local/suricata/et-luajit-scripts/
 sudo mkdir -p /usr/local/suricata/var/log
 sudo mkdir -p /usr/local/suricata/var/run/suricata/
-sudo apt-get install build-essential libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libpcap-ruby libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev  libz-dev libcap-ng-dev libmagic-dev python-mysqldb liblua5.1-zip-dev luarocks cmake openvswitch-switch libaprutil1-dev libaprutil1-dbd-sqlite3 libapreq2 libapreq2-dev -y 
+sudo apt-get install build-essential libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev  libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev luarocks cmake openvswitch-switch libaprutil1-dev libaprutil1-dbd-sqlite3 libapreq2-3 libapreq2-dev liblua5.1-0 liblua5.1-0-dev libapr1 libaprutil1 libaprutil1-dev libaprutil1-dbd-sqlite3 libapreq2-3 libapreq2-dev xrdp -y 
 
 #wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.35.tar.gz
 tar -xzvf pcre-8.35.tar.gz
@@ -94,6 +94,7 @@ sudo ln -s /usr/lib/x86_64-linux-gnu/lua/5.1/zip.so /usr/local/lib/lua/5.1/zip.s
 sudo ln -s /usr/local/lib/lua/apr /usr/local/lib/lua/5.1/apr
 sudo ln -s /usr/local/lib/lua/ltn12ce /usr/local/lib/lua/5.1/ltn12ce 
 sudo ln -s /usr/local/share/lua/cmod/zlib.so /usr/local/lib/lua/5.1/zlib.so
+sudo ln -s 
 #wget http://www.openinfosecfoundation.org/download/suricata-1.4.7.tar.gz
 tar -xzvf suricata-1.4.7.tar.gz
 cd suricata-1.4.7
@@ -130,7 +131,7 @@ cd pulledpork-0.6.1
 patch -p1 < ../pulledpork-etpro-fix.diff
 sudo cp -f pulledpork.pl /usr/local/bin/
 echo "#!/bin/sh
-/usr/local/bin/pulledpork.pl -c /usr/local/suricata/etc/pp.config -K /usr/local/suricata/etc/
+/usr/local/bin/pulledpork.pl -c /usr/local/suricata/etc/pp.config
 cd /usr/local/suricata/et-luajit-scripts/ && git pull
 " > ruleupdates.sh
 chmod +x ruleupdates.sh
@@ -165,7 +166,6 @@ rm distorm3 -Rf
 sudo rm moloch-master -Rf
 rm pp.config
  
-#!/bin/sh
 sudo ovs-vsctl add-br lan0
 for tap in `seq 0 4`; do
         sudo ip tuntap add mode tap lan0p$tap
@@ -196,11 +196,11 @@ chmod +x services/*
 sudo cp services/* /etc/init.d/
 
 echo "service /etc/init.d/openvswitch-switch restart
-for tap in `seq 0 4`; do
+for tap in \`seq 0 4\`; do
  sudo ip tuntap add mode tap lan0p$tap
 done;
 sudo ip tuntap list
-for tap in `seq 0 4`; do
+for tap in \`seq 0 4\`; do
   sudo ip link set lan0p$tap up
 done;
 sudo ip link
@@ -231,3 +231,6 @@ echo "deb http://download.virtualbox.org/virtualbox/debian trusty contrib" |sudo
 wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
 sudo apt-get update
 sudo apt-get install virtualbox-4.3
+
+echo xfce4-session > ~/.xsession
+sudo service xrdp restart
