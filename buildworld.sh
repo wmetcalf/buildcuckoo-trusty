@@ -1,6 +1,6 @@
 #!/bin/sh
 sudo apt-get update -y && sudo apt-get upgrade -y
-sudo apt-get install -y screen unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev libswitch-perl
+sudo apt-get install -y vim screen unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev libswitch-perl
 
 sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump
 sudo pip install bottle pefile django pycrypto
@@ -94,7 +94,7 @@ sudo ln -s /usr/lib/x86_64-linux-gnu/lua/5.1/zip.so /usr/local/lib/lua/5.1/zip.s
 sudo ln -s /usr/local/lib/lua/apr /usr/local/lib/lua/5.1/apr
 sudo ln -s /usr/local/lib/lua/ltn12ce /usr/local/lib/lua/5.1/ltn12ce 
 sudo ln -s /usr/local/share/lua/cmod/zlib.so /usr/local/lib/lua/5.1/zlib.so
-sudo ln -s 
+
 #wget http://www.openinfosecfoundation.org/download/suricata-1.4.7.tar.gz
 tar -xzvf suricata-1.4.7.tar.gz
 cd suricata-1.4.7
@@ -102,6 +102,8 @@ cd suricata-1.4.7
 sudo cp ../suricata.yaml /usr/local/suricata/etc/
 sudo cp reference.config /usr/local/suricata/etc/
 sudo cp classification.config /usr/local/suricata/etc/
+echo "alert http any any -> any any (msg:\"FILE store all\"; filestore; flowbits:noalert; sid:44444; rev:1;)" > local.rules
+sudo cp local.rules /usr/local/suricata/etc/
 #cp rules/files.rules /usr/local/suricata/etc/etpro/
 cd ..
 
@@ -135,16 +137,19 @@ echo "#!/bin/sh
 cd /usr/local/suricata/et-luajit-scripts/ && git pull
 " > ruleupdates.sh
 chmod +x ruleupdates.sh
+echo "pcre:SURICATA (STMP|IP|TCP|ICMP|HTTP|STREAM)" >> etc/disablesid.conf 
 sudo cp ruleupdates.sh /usr/local/bin/
 sudo cp ../pp.config /usr/local/suricata/etc/
 sudo cp etc/modifysid.conf /usr/local/suricata/etc/
 sudo cp etc/enablesid.conf /usr/local/suricata/etc/
 sudo cp etc/disablesid.conf /usr/local/suricata/etc/
 cd ..
+ruleupdates.sh
 
 unzip moloch-master.zip
 cd moloch-master
 patch -p1 < ../moloch-geoip-fix.diff
+patch -p1 < ../moloch-free-space.diff
 sudo ./easybutton-singlehost.sh
 cd ..
 sudo pkill -f "/data/moloch/bin/node viewer.js"
@@ -234,3 +239,11 @@ sudo apt-get install virtualbox-4.3
 
 echo xfce4-session > ~/.xsession
 sudo service xrdp restart
+
+sudo virsh net-destroy default
+sudo virsh net-undefine default
+sudo service libvirtd restart
+
+echo "#!/bin/sh
+su cuckoo -c \"/usr/local/bin/ruleupdates.sh\" && /etc/init.d/cuckoo restart" | sudo tee /etc/cron.daily/ruleupdates.sh
+sudo chmod +x /etc/cron.daily/ruleupdates.sh
