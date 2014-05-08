@@ -1,0 +1,115 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:             iptables fw 
+# Required-Start:       $remote_fs $syslog
+# Required-Stop:        $remote_fs $syslog
+# Default-Start:        2 3 4 5
+# Default-Stop:         
+# Short-Description:    iptables fw
+### END INIT INFO
+
+IPTABLES="/sbin/iptables"
+ZOMBIEIF="lan0p1"
+RTRIF="lan0p0"
+HOSTIF="lan0hp0"
+INTIF_IP="192.168.1.254"
+INTIF_NET="192.168.1.0/24"
+MGMTIF="eth0"
+LO="lo"
+LO_IP="127.0.0.1"
+
+case "$1" in
+  start)
+
+echo "1" > /proc/sys/net/ipv4/ip_forward
+echo "1" > /proc/sys/net/ipv4/tcp_syncookies
+echo "1" > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+echo "1" > /proc/sys/net/ipv4/conf/all/rp_filter
+echo "1" > /proc/sys/net/ipv4/conf/all/secure_redirects
+echo "1" > /proc/sys/net/ipv4/conf/all/log_martians
+
+/sbin/modprobe ip_tables
+/sbin/modprobe ip_conntrack
+/sbin/modprobe ip_nat_ftp
+/sbin/modprobe ip_conntrack_ftp
+/sbin/modprobe ip_nat_irc
+/sbin/modprobe ip_conntrack_irc
+
+$IPTABLES -F
+$IPTABLES -F -t nat
+$IPTABLES -X
+$IPTABLES -X -t nat
+$IPTABLES -P INPUT DROP
+$IPTABLES -P OUTPUT ACCEPT
+$IPTABLES -P FORWARD DROP
+
+###############################################################################
+### INPUT
+###############################################################################
+$IPTABLES -A INPUT -p 47 -j ACCEPT
+$IPTABLES -A INPUT -p udp --dport 68 -j ACCEPT
+$IPTABLES -A INPUT -p udp --dport 67 -j ACCEPT
+$IPTABLES -A INPUT -p ALL -m state --state INVALID -j LOG --log-level notice --log-prefix "(INPUT-D) INVALID: "
+$IPTABLES -A INPUT -p ALL -m state --state INVALID -j DROP
+
+$IPTABLES -A INPUT -p ALL -i $LO -j LOG --log-level notice --log-prefix "(INPUT-A) LOCAL: "
+$IPTABLES -A INPUT -p ALL -i $LO -j ACCEPT
+
+$IPTABLES -A INPUT -p TCP ! --syn -m state --state NEW -j LOG --log-level notice --log-prefix "(INPUT-D) NEW NOT SYN: "
+$IPTABLES -A INPUT -p TCP ! --syn -m state --state NEW -j DROP
+
+$IPTABLES -A INPUT -p ALL -m state --state ESTABLISHED,RELATED -j LOG --log-level notice --log-prefix "(INPUT-A) ESTABLISHED: "
+$IPTABLES -A INPUT -p ALL -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+$IPTABLES -A INPUT -p ICMP ! --fragment --icmp-type 8 -j LOG --log-level notice --log-prefix "(INPUT-A) ICMP 8: "
+$IPTABLES -A INPUT -p ICMP ! --fragment --icmp-type 8 -j ACCEPT
+$IPTABLES -A INPUT -p tcp --dport 22 -i $MGMTIF -m state --state NEW -j ACCEPT
+#$IPTABLES -A INPUT -p tcp --dport 443 -i $EXTIF -m state --state NEW -j ACCEPT
+$IPTABLES -A INPUT -p tcp --dport 3389 -i $MGMTIF -m state --state NEW -j ACCEPT
+$IPTABLES -A INPUT -p tcp --dport 8080 -i $MGMTIF -m state --state NEW -j ACCEPT
+$IPTABLES -A INPUT -p tcp --dport 2042 -i $HOSTIF -m state --state NEW -j ACCEPT
+$IPTABLES -A INPUT -p tcp --dport 443 -m state --state NEW -i $MGMTIF -j ACCEPT
+$IPTABLES -A INPUT -p tcp --dport 443 -m state --state NEW -i $EXTIF -j ACCEPT
+$IPTABLES -A INPUT -p tcp --dport 8005 -m state --state NEW -i $MGMTIF -j ACCEPT
+###############################################################################
+### FORWARD
+###############################################################################
+
+$IPTABLES -A FORWARD -p ALL -m state --state INVALID -j LOG --log-level notice --log-prefix "(FORWARD-D) INVALID: "
+$IPTABLES -A FORWARD -p ALL -m state --state INVALID -j DROP
+
+$IPTABLES -A FORWARD -p TCP ! --syn -m state --state NEW -j LOG --log-level notice --log-prefix "(FORWARD-D) NEW NOT SYN: "
+$IPTABLES -A FORWARD -p TCP ! --syn -m state --state NEW -j DROP
+
+$IPTABLES -A FORWARD -p ALL -m state --state ESTABLISHED,RELATED -j LOG --log-level notice --log-prefix "(FORWARD-A) EST: "
+$IPTABLES -A FORWARD -p ALL -m state --state ESTABLISHED,RELATED -j ACCEPT
+$IPTABLES -A FORWARD -p ALL -i $ZOMBIEIF -o $RTRIF -j ACCEPT
+$IPTABLES -A FORWARD -p tcp -o $ZOMBIEIF --dport 2042 -j ACCEPT 
+$IPTABLES -A FORWARD -j LOG --log-level notice --log-prefix "FORWARD DROP: "
+
+###############################################################################
+### POSTROUTING
+###############################################################################
+;;
+  stop)
+
+
+echo "0" > /proc/sys/net/ipv4/ip_forward
+
+$IPTABLES -F
+$IPTABLES -F -t nat
+$IPTABLES -X
+$IPTABLES -X -t nat
+$IPTABLES -P INPUT DROP
+$IPTABLES -P OUTPUT DROP
+$IPTABLES -P FORWARD DROP
+;;
+
+ restart)
+   $0 stop
+   $0 start
+   ;;
+
+esac
+exit 0
+

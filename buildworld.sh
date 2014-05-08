@@ -1,6 +1,6 @@
 #!/bin/sh
 sudo apt-get update -y && sudo apt-get upgrade -y
-sudo apt-get install -y vim screen unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev libswitch-perl
+sudo apt-get install -y vim screen unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev libswitch-perl libcdio-utils
 
 sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump
 sudo pip install bottle pefile django pycrypto
@@ -199,14 +199,17 @@ sudo ip route add 192.168.1.0/24 dev lan0hp0
 
 chmod +x services/*
 sudo cp services/* /etc/init.d/
+sudo update-rc.d iptables defaults
+sudo update-rc.d suricata defaults
+sudo update-rc.d moloch defaults
 
 echo "service /etc/init.d/openvswitch-switch restart
 for tap in \`seq 0 4\`; do
- sudo ip tuntap add mode tap lan0p$tap
+ sudo ip tuntap add mode tap lan0p\$tap
 done;
 sudo ip tuntap list
 for tap in \`seq 0 4\`; do
-  sudo ip link set lan0p$tap up
+  sudo ip link set lan0p\$tap up
 done;
 sudo ip link
 
@@ -219,8 +222,6 @@ sudo ip addr add 192.168.1.1 dev lan0hp0
 sudo ip link set lan0hp0 up
 sudo ip route add 192.168.1.0/24 dev lan0hp0
 
-/etc/init.d/suricata start
-/etc/init.d/moloch start
 /etc/init.d/cuckoo start
 exit 0" | sudo tee /etc/rc.local
 
