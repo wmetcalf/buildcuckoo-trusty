@@ -38,7 +38,7 @@ def randomMAC():
 def getnewmac(hostname):  
   regex = r"(%s)\s+([0-9A-Fa-f]+)\s+([0-9\.]+)" % hostname  
   pat = re.compile(regex, re.I | re.S | re.M)  
-  with open("/data/etc/macs.txt") as fh:  
+  with open("/data/macs.txt") as fh:  
     for line in fh:  
       if pat.search(line):  
         (hostname,mac,ip) = pat.match(line).groups()  
@@ -199,14 +199,14 @@ def getdmi():
    
 dmi = None  
 try:  
-  fh = open('/data/etc/dmi.txt', 'r')  
+  fh = open('/data/dmi.txt', 'r')  
   if fh:  
     dmi = json.load(fh)  
     fh.close()  
 except Exception:  
   dmi = getdmi()  
 
-  with open('/data/etc/dmi.txt', 'w') as outfile:  
+  with open('/data/dmi.txt', 'w') as outfile:  
     json.dump(dmi, outfile, sort_keys=True, indent=4, separators=(',', ': '))  
   print json.dumps(dmi, sort_keys=True, indent=4, separators=(',', ': '))  
  
