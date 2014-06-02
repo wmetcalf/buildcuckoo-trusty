@@ -138,10 +138,18 @@ def getdmi():
   dmi['DmiBoardProduct']  = re.search("Product Name: ([A-Z0-9\\ \\.\\-/]+)", dmitmp, re.I | re.S | re.M).group(1)  
   dmi['DmiBoardVersion']  = "string:" + re.search("Version: ([A-Z0-9\\ \\.]+)", dmitmp, re.I | re.S | re.M).group(1)  
   dmi['DmiBoardSerial']   = "string:" + re.search("Serial Number: ([0-9A-Z\\ \\-]+)", dmitmp, re.I | re.S | re.M).group(1)  
-  dmi['DmiBoardAssetTag']  = re.search("Asset Tag: ([0-9A-Z\\ \\-\\.]+)", dmitmp, re.I | re.S | re.M).group(1)  
-  dmi['DmiBoardLocInChass'] = re.search("Location In Chassis: ([0-9A-Z\\ \\-\\.]+)", dmitmp, re.I | re.S | re.M).group(1)  
-  dmi['DmiBoardBoardType'] = str(MotherboardTypes.index(re.search("Type: ([0-9A-Z\\ \\-]+)", dmitmp, re.I | re.S | re.M).group(1))+1)  
-   
+  try:
+      dmi['DmiBoardAssetTag']  = re.search("Asset Tag: ([0-9A-Z\\ \\-\\.]+)", dmitmp, re.I | re.S | re.M).group(1)  
+  except:
+      print "Failed to get Asset Tag"
+  try:
+      dmi['DmiBoardLocInChass'] = re.search("Location In Chassis: ([0-9A-Z\\ \\-\\.]+)", dmitmp, re.I | re.S | re.M).group(1)  
+  except:
+      print "Failed to get Location in Chassis"
+  try:
+      dmi['DmiBoardBoardType'] = str(MotherboardTypes.index(re.search("Type: ([0-9A-Z\\ \\-]+)", dmitmp, re.I | re.S | re.M).group(1))+1)  
+  except:
+      print "Failed to get Motherboard Type" 
   # Anti-VM detection, DMI system enclosure or chassis (type 3) 
   ChassiTypes = [  
     "Other",   
@@ -235,7 +243,7 @@ for target in sys.argv[1:]:
   
   hd = gethd()
   for key, value in hd.iteritems():
-    runcmd([VBoxManage,"setextradata",target,"VBoxInternal/Devices/ahci/0/Config/Port0/" + key,value])
+    runcmd([VBoxManage,"setextradata",target,"VBoxInternal/Devices/piix3ide/0/Config/PrimarySlave/" + key,value])
 
   cd = getcd()
   for key, value in cd.iteritems():

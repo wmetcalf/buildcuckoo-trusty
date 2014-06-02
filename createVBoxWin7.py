@@ -17,7 +17,7 @@ def runcmd(cmd):
     return None  
   
 VBoxManage = '/usr/bin/VBoxManage'  
-vboxConfBios = './vboxConfBios.py'  
+vboxConfBios = './vboxConfBiosWin7.py'  
 
 for machine in sys.argv[1:]:  
   hdpath = os.path.join('/','data','VirtualBox VMs',machine,machine+'.vdi')  
