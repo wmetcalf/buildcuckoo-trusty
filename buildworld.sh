@@ -248,5 +248,5 @@ sudo virsh net-undefine default
 sudo service libvirtd restart
 
 echo "#!/bin/sh
-su cuckoo -c \"/usr/local/bin/ruleupdates.sh\" && /etc/init.d/cuckoo restart" | sudo tee /etc/cron.daily/ruleupdates.sh
-sudo chmod +x /etc/cron.daily/ruleupdates.sh
+su cuckoo -c \"/usr/local/bin/ruleupdates.sh\" && /etc/init.d/suricata restart" | sudo tee /etc/cron.daily/ruleupdates
+sudo chmod +x /etc/cron.daily/ruleupdates
