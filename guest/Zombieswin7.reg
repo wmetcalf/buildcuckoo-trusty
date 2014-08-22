@@ -63,6 +63,7 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Ext]
 "DisableAddonLoadTimePerformanceNotifications"=dword:00000001
 "IgnoreFrameApprovalCheck"=dword:00000001
+"NoFirsttimeprompt"=dword:00000001
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate]
 
