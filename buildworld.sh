@@ -19,8 +19,8 @@ sudo python setup.py install
 cd ..
 
 #wget https://github.com/plusvic/yara/archive/2.1.0.tar.gz
-tar -zxf 2.1.0.tar.gz
-cd yara-2.1.0
+tar -zxf v3.1.0.tar.gz
+cd yara-3.1.0
 ./bootstrap.sh
 chmod +x build.sh
 ./build.sh
@@ -34,8 +34,8 @@ sudo python setup.py install
 cd ../..
 
 #wget http://volatility.googlecode.com/files/volatility-2.3.1.tar.gz
-tar -zxf volatility-2.3.1.tar.gz
-cd volatility-2.3.1
+tar -zxf volatility-2.4.tar.gz
+cd volatility-2.4
 python setup.py build
 sudo python setup.py install
 cd ..
@@ -102,9 +102,9 @@ sudo ln -s /usr/local/lib/lua/apr /usr/local/lib/lua/5.1/apr
 sudo ln -s /usr/local/lib/lua/ltn12ce /usr/local/lib/lua/5.1/ltn12ce 
 sudo ln -s /usr/local/share/lua/cmod/zlib.so /usr/local/lib/lua/5.1/zlib.so
 
-#wget http://www.openinfosecfoundation.org/download/suricata-1.4.7.tar.gz
-tar -xzvf suricata-1.4.7.tar.gz
-cd suricata-1.4.7
+#wget http://www.openinfosecfoundation.org/download/suricata-2.0.4.tar.gz
+tar -xzvf suricata-2.0.4.tar.gz
+cd suricata-2.0.4
 ./configure LD_RUN_PATH="/usr/local/pcre-8.35/lib:/usr/local/luajit20/lib/:/usr/local/lib/:/usr/lib:/usr/local/lib" --enable-pcre-jit --with-libpcre-libraries=/usr/local/pcre-8.35/lib/ --with-libpcre-includes=/usr/local/pcre-8.35/include/ --enable-profiling --prefix=/usr/local/suricata/ --with-libnss-includes=/usr/include/nss --with-libnss-libs=/usr/lib/nss --with-libnspr-includes=/usr/include/nspr --with-libnspr-libraries=/usr/lib/nspr --enable-luajit --with-libluajit-includes=/usr/local/include/luajit-2.0/ --with-libluajit-libraries=/usr/local/lib/ --enable-unix-socket && make -j && sudo make install
 sudo cp ../suricata.yaml /usr/local/suricata/etc/
 sudo cp reference.config /usr/local/suricata/etc/
@@ -131,7 +131,7 @@ sid_msg=/usr/local/suricata/etc/sid-msg.map
 sid_changelog=/usr/local/suricata/var/log/etpro_sid_changes.log
 disablesid=/usr/local/suricata/etc/disablesid.conf
 engine=suricata
-suricata_version=1.4.7
+suricata_version=2.0.4
 version=0.6.0
 " > pp.config
 
@@ -167,13 +167,13 @@ sudo pkill -f "/data/moloch/elasticsearch-0"
 sudo git clone https://github.com/EmergingThreats/cuckoo-1.1.git /data/cuckoo
 
 rm pcre-8.35 -Rf
-rm suricata-1.4.7 -Rf
+rm suricata-2.0.4 -Rf
 rm pulledpork-0.6.1 -Rf
 rm LuaJIT-2.0.3 -Rf
 rm lua-zlib -Rf
 rm ltn12ce -Rf
-rm yara-2.1.0 -Rf
-sudo rm volatility-2.3.1 -Rf
+rm yara-3.1.0 -Rf
+sudo rm volatility-2.4 -Rf
 rm pydeep -Rf
 rm distorm3 -Rf
 sudo rm moloch-master -Rf

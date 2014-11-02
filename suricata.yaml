@@ -8,7 +8,7 @@ outputs:
       filename: alert 
       append: yes
   - unified2-alert:
-      enabled: yes
+      enabled: no 
       filename: unified2.alert
   - http-log:
       enabled: yes
@@ -16,7 +16,7 @@ outputs:
       append: yes
       extended: yes
   - pcap-info:
-      enabled: yes 
+      enabled: no 
   - alert-debug:
       enabled: no
       filename: alert-debug.log
@@ -40,7 +40,22 @@ outputs:
       enabled: yes  # Log TLS connections.
       filename: tls.log # File to store TLS logs.
       extended: yes # Log extended information like fingerprint
-
+  - eve-log:
+      enabled: yes
+      type: file #file|syslog|unix_dgram|unix_stream
+      filename: eve.json
+      types:
+        - alert
+        - http:
+            extended: yes     # enable this for extended logging information
+        - dns
+        - tls:
+            extended: yes     # enable this for extended logging information
+        - files:
+            force-magic: no   # force logging magic on all logged files
+            force-md5: no     # force logging of md5 checksums
+        - ssh
+ 
 magic-file: /usr/share/file/magic
 af-packet:
   - interface: eth0
@@ -283,6 +298,40 @@ profiling:
 
 coredump:
   max-dump: unlimited
+
+app-layer:
+  protocols:
+    tls:
+      enabled: yes
+      detection-ports:
+        dp: 443
+    dcerpc:
+      enabled: yes
+    ftp:
+      enabled: yes
+    ssh:
+      enabled: yes
+    smtp:
+      enabled: yes
+    imap:
+      enabled: detection-only
+    msn:
+      enabled: detection-only
+    smb:
+      enabled: yes
+      detection-ports:
+        dp: 139
+    dns:
+      tcp:
+        enabled: yes
+        detection-ports:
+          dp: 53
+      udp:
+        enabled: yes
+        detection-ports:
+          dp: 53
+    http:
+      enabled: yes
 default-rule-path: /usr/local/suricata/etc/
 rule-files:
  - all.rules
