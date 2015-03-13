@@ -144,7 +144,11 @@ sudo pkill -f "/data/moloch/bin/node viewer.js"
 sudo pkill -f "/data/moloch/elasticsearch-0"
 
 
-sudo git clone https://github.com/EmergingThreats/cuckoo-1.1.git /data/cuckoo
+#sudo git clone https://github.com/EmergingThreats/cuckoo-1.1.git /data/cuckoo
+sudo git clone https://github.com/wmetcalf/cuckoo-modified /data/cuckoo
+cd cuckoo/utils
+./community.py -a -f
+cd ../..
 
 rm suricata-2.0.7 -Rf
 rm pulledpork-0.6.1 -Rf
