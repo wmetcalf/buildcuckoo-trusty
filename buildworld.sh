@@ -1,9 +1,11 @@
 #!/bin/sh
 sudo apt-get update -y && sudo apt-get upgrade -y
-sudo apt-get install -y vim screen unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev libswitch-perl libcdio-utils mongodb-server python-simplejson p7zip-full 
+sudo apt-get install -y vim screen unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev libswitch-perl libcdio-utils mongodb-server python-simplejson p7zip-full libzzip-dev python-geoip python-chardet python-m2crypto 
 
 sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump
-sudo pip install bottle django==1.6.7 pycrypto clamd
+sudo pip install bottle django pycrypto clamd distorm3 pygal 
+sudo luarocks install struct
+sudo luarocks install lua-apr
 
 #wget https://pefile.googlecode.com/files/pefile-1.2.10-139.tar.gz
 tar -xzvf pefile-1.2.10-139.tar.gz
@@ -11,16 +13,9 @@ cd pefile-1.2.10-139
 python setup.py build
 sudo python setup.py install
 
-#wget https://distorm.googlecode.com/files/distorm3.zip
-unzip distorm3.zip
-cd distorm3
-python setup.py build
-sudo python setup.py install
-cd ..
-
 #wget https://github.com/plusvic/yara/archive/2.1.0.tar.gz
-tar -zxf v3.1.0.tar.gz
-cd yara-3.1.0
+tar -zxf v3.3.0.tar.gz
+cd yara-3.3.0
 ./bootstrap.sh
 chmod +x build.sh
 ./build.sh
@@ -53,33 +48,11 @@ sudo mkdir -p /usr/local/suricata/include/linux
 sudo mkdir -p /usr/local/suricata/sbin
 sudo mkdir -p /usr/local/suricata/etc/
 sudo mkdir -p /usr/local/suricata/etc/
-sudo mkidr -p /usr/local/suricata/et-luajit-scripts/
+sudo mkdir -p /usr/local/suricata/et-luajit-scripts/
 sudo mkdir -p /usr/local/suricata/var/log
 sudo mkdir -p /usr/local/suricata/var/run/suricata/
 sudo mkdir -p /data/etc/
 sudo apt-get install build-essential libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev  libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev luarocks cmake openvswitch-switch libaprutil1-dev libaprutil1-dbd-sqlite3 libapreq2-3 libapreq2-dev liblua5.1-0 liblua5.1-0-dev libapr1 libaprutil1 libaprutil1-dev libaprutil1-dbd-sqlite3 libapreq2-3 libapreq2-dev xrdp python-sqlalchemy -y 
-
-#wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.35.tar.gz
-tar -xzvf pcre-8.35.tar.gz
-cd pcre-8.35
-./configure --prefix=/usr/local/pcre-8.35/ --enable-jit --enable-utf8 --enable-unicode-properties
-make -j && sudo make install
-cd ..
-
-#wget http://luajit.org/download/LuaJIT-2.0.3.tar.gz
-tar -xzvf LuaJIT-2.0.3.tar.gz
-cd LuaJIT-2.0.3
-make -j
-sudo make install
-cd ..
-sudo ldconfig
-echo "/usr/local/luajit20/lib/" | sudo tee /etc/ld.so.conf.d/suricata.conf
-echo "/usr/local/pce-8.35/lib/" | sudo tee -a /etc/ld.so.conf.d/suricata.conf
-
-sudo ldconfig
-
-sudo luarocks install struct
-sudo luarocks install lua-apr
 
 mkdir lua-zlib
 cd lua-zlib
@@ -92,23 +65,30 @@ git clone https://github.com/mkottman/ltn12ce
 cd ltn12ce
 mkdir build
 cd build
-cmake .. -DBUILD_ZLIB=Off
+cmake .. -DBUILD_ZLIB=Off -DLUA_LIBRARY=/usr/lib/x86_64-linux-gnu/liblua5.1.so -DLUA_INCLUDE_DIR=/usr/include/lua5.1/
 make
 sudo make install
 cd ../..
+sudo ln -s /usr/local/lib/lua/ltn12ce /usr/local/lib/lua/5.1/ltn12ce
 
-sudo ln -s /usr/lib/x86_64-linux-gnu/lua/5.1/zip.so /usr/local/lib/lua/5.1/zip.so
-sudo ln -s /usr/local/lib/lua/apr /usr/local/lib/lua/5.1/apr
-sudo ln -s /usr/local/lib/lua/ltn12ce /usr/local/lib/lua/5.1/ltn12ce 
-sudo ln -s /usr/local/share/lua/cmod/zlib.so /usr/local/lib/lua/5.1/zlib.so
+luarocks download luazip
+luarocks unpack luazip
+rm luazip-1.2.4-1/luazip/src/luazip.c
+cp -f luazip.c luazip-1.2.4-1/luazip/src/
+cd luazip-1.2.4-1/luazip
+sudo luarocks make luazip-1.2.4-1.rockspec
+cd ../..
 
-#wget http://www.openinfosecfoundation.org/download/suricata-2.0.4.tar.gz
-tar -xzvf suricata-2.0.4.tar.gz
-cd suricata-2.0.4
-./configure LD_RUN_PATH="/usr/local/pcre-8.35/lib:/usr/local/luajit20/lib/:/usr/local/lib/:/usr/lib:/usr/local/lib" --enable-pcre-jit --with-libpcre-libraries=/usr/local/pcre-8.35/lib/ --with-libpcre-includes=/usr/local/pcre-8.35/include/ --enable-profiling --prefix=/usr/local/suricata/ --with-libnss-includes=/usr/include/nss --with-libnss-libs=/usr/lib/nss --with-libnspr-includes=/usr/include/nspr --with-libnspr-libraries=/usr/lib/nspr --enable-luajit --with-libluajit-includes=/usr/local/include/luajit-2.0/ --with-libluajit-libraries=/usr/local/lib/ --enable-unix-socket && make -j && sudo make install
+#wget http://www.openinfosecfoundation.org/download/suricata-2.0.7.tar.gz
+#wget https://raw.githubusercontent.com/wmetcalf/buildcuckoo-trusty/master/suricata.yaml
+tar -xzvf suricata-2.0.7.tar.gz
+cd suricata-2.0.7
+./configure --enable-profiling --prefix=/usr/local/suricata/ --with-libnss-includes=/usr/include/nss --with-libnss-libs=/usr/lib/nss --with-libnspr-includes=/usr/include/nspr --with-libnspr-libraries=/usr/lib/nspr --enable-lua --enable-unix-socket && make -j && sudo make install
 sudo cp ../suricata.yaml /usr/local/suricata/etc/
 sudo cp reference.config /usr/local/suricata/etc/
 sudo cp classification.config /usr/local/suricata/etc/
+cd ..
+
 echo "alert http any any -> any any (msg:\"FILE store all\"; filestore; flowbits:noalert; sid:44444; rev:1;)" > local.rules
 sudo cp local.rules /usr/local/suricata/etc/
 #cp rules/files.rules /usr/local/suricata/etc/etpro/
@@ -146,6 +126,7 @@ cd /usr/local/suricata/et-luajit-scripts/ && git pull
 " > ruleupdates.sh
 chmod +x ruleupdates.sh
 echo "pcre:SURICATA (STMP|IP|TCP|ICMP|HTTP|STREAM)" >> etc/disablesid.conf 
+echo "pcre:GPL NETBIOS" >> etc/disablesid.conf
 sudo cp ruleupdates.sh /usr/local/bin/
 sudo cp ../pp.config /usr/local/suricata/etc/
 sudo cp etc/modifysid.conf /usr/local/suricata/etc/
@@ -154,10 +135,9 @@ sudo cp etc/disablesid.conf /usr/local/suricata/etc/
 cd ..
 ruleupdates.sh
 
-unzip moloch-master.zip
-cd moloch-master
-patch -p1 < ../moloch-geoip-fix.diff
-patch -p1 < ../moloch-free-space.diff
+tar -xzvf v0.11.3.tar.gz
+cd moloch-0.11.3 
+patch -p1 < ../moloch-fixes.diff 
 sudo ./easybutton-singlehost.sh
 cd ..
 sudo pkill -f "/data/moloch/bin/node viewer.js"
@@ -166,17 +146,14 @@ sudo pkill -f "/data/moloch/elasticsearch-0"
 
 sudo git clone https://github.com/EmergingThreats/cuckoo-1.1.git /data/cuckoo
 
-rm pcre-8.35 -Rf
-rm suricata-2.0.4 -Rf
+rm suricata-2.0.7 -Rf
 rm pulledpork-0.6.1 -Rf
-rm LuaJIT-2.0.3 -Rf
 rm lua-zlib -Rf
 rm ltn12ce -Rf
-rm yara-3.1.0 -Rf
+rm yara-3.3.0 -Rf
 sudo rm volatility-2.4 -Rf
 rm pydeep -Rf
-rm distorm3 -Rf
-sudo rm moloch-master -Rf
+sudo rm moloch-0.11.3 -Rf
 rm pp.config
  
 sudo ovs-vsctl add-br lan0

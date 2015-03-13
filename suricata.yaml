@@ -4,14 +4,14 @@ runmode: single
 default-log-dir: /usr/local/suricata/var/log/
 outputs:
   - fast:
-      enabled: yes
+      enabled: no 
       filename: alert 
       append: yes
   - unified2-alert:
       enabled: no 
       filename: unified2.alert
   - http-log:
-      enabled: yes
+      enabled: no
       filename: http.log
       append: yes
       extended: yes
@@ -31,29 +31,54 @@ outputs:
       force-magic: yes   # force logging magic on all stored files
       force-md5: yes     # force logging of md5 checksums
   - file-log:
-      enabled: yes
+      enabled: yes 
       filename: files-json.log
       append: yes
       force-magic: yes   # force logging magic on all logged files
       force-md5: yes     # force logging of md5 checksums
   - tls-log:
-      enabled: yes  # Log TLS connections.
+      enabled: no  # Log TLS connections.
       filename: tls.log # File to store TLS logs.
       extended: yes # Log extended information like fingerprint
   - eve-log:
       enabled: yes
       type: file #file|syslog|unix_dgram|unix_stream
-      filename: eve.json
+      filename: alert.json
       types:
         - alert
+  - eve-log:
+      enabled: yes
+      type: file #file|syslog|unix_dgram|unix_stream
+      filename: http.json
+      types:
         - http:
             extended: yes     # enable this for extended logging information
-        - dns
+  - eve-log:
+      enabled: yes
+      type: file #file|syslog|unix_dgram|unix_stream
+      filename: dns.json
+      types:
+        - dns:
+  - eve-log:
+      enabled: yes
+      type: file #file|syslog|unix_dgram|unix_stream
+      filename: tls.json
+      types:
         - tls:
             extended: yes     # enable this for extended logging information
+  - eve-log:
+      enabled: yes
+      type: file #file|syslog|unix_dgram|unix_stream
+      filename: files.json
+      types:
         - files:
-            force-magic: no   # force logging magic on all logged files
-            force-md5: no     # force logging of md5 checksums
+            force-magic: yes   # force logging magic on all logged files
+            force-md5: yes     # force logging of md5 checksums
+  - eve-log:
+      enabled: yes
+      type: file #file|syslog|unix_dgram|unix_stream
+      filename: ssh.json
+      types:
         - ssh
  
 magic-file: /usr/share/file/magic

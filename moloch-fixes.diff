@@ -1,0 +1,33 @@
+diff -uNr moloch-0.11.3/easybutton-build.sh moloch-0.11.3-patch/easybutton-build.sh
+--- moloch-0.11.3/easybutton-build.sh	2015-02-26 10:58:02.000000000 -0600
++++ moloch-0.11.3-patch/easybutton-build.sh	2015-03-11 09:00:12.151399099 -0500
+@@ -127,7 +127,7 @@
+ #    (cd GeoIP-$GEOIP ; libtoolize -f)
+ #  fi
+ 
+-  (cd GeoIP-$GEOIP ; ./configure --enable-static; $MAKE)
++  (cd GeoIP-$GEOIP ; libtoolize -f && ./bootstrap && ./configure --enable-static; $MAKE)
+   if [ $? -ne 0 ]; then
+     echo "MOLOCH: $MAKE failed"
+     exit 1
+diff -uNr moloch-0.11.3/single-host/etc/config.ini.template moloch-0.11.3-patch/single-host/etc/config.ini.template
+--- moloch-0.11.3/single-host/etc/config.ini.template	2015-02-26 10:58:02.000000000 -0600
++++ moloch-0.11.3-patch/single-host/etc/config.ini.template	2015-03-11 09:01:08.515399092 -0500
+@@ -98,7 +98,7 @@
+ # expressed as a percentage (ex: 5%).  This does NOT delete the session records in 
+ # the database. It is recommended this value is between 5% and 10% of the disk.  
+ # Database deletes are done by the db.pl expire script
+-freeSpaceG = 600
++freeSpaceG = 5 
+ 
+ # The port to listen on, by default 8005
+ viewPort = 8005
+@@ -256,7 +256,7 @@
+ # Classes of nodes
+ # Can override most default values, and create a tag call node:<classname>
+ [test]
+-freeSpaceG = 200
++freeSpaceG = 5 
+ 
+ ##############################################################################
+ # Nodes
