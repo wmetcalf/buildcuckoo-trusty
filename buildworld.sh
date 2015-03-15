@@ -12,8 +12,9 @@ tar -xzvf pefile-1.2.10-139.tar.gz
 cd pefile-1.2.10-139
 python setup.py build
 sudo python setup.py install
+cd ..
 
-#wget https://github.com/plusvic/yara/archive/2.1.0.tar.gz
+#yara
 tar -zxf v3.3.0.tar.gz
 cd yara-3.3.0
 ./bootstrap.sh
@@ -28,7 +29,7 @@ python setup.py build
 sudo python setup.py install
 cd ../..
 
-#wget http://volatility.googlecode.com/files/volatility-2.3.1.tar.gz
+#volatility
 tar -zxf volatility-2.4.tar.gz
 cd volatility-2.4
 python setup.py build
@@ -92,7 +93,6 @@ cd ..
 echo "alert http any any -> any any (msg:\"FILE store all\"; filestore; flowbits:noalert; sid:44444; rev:1;)" > local.rules
 sudo cp local.rules /usr/local/suricata/etc/
 #cp rules/files.rules /usr/local/suricata/etc/etpro/
-cd ..
 
 sudo git clone https://github.com/EmergingThreats/et-luajit-scripts /usr/local/suricata/et-luajit-scripts
 sudo cp /usr/local/suricata/et-luajit-scripts/* /usr/local/suricata/etc/
@@ -145,10 +145,11 @@ sudo pkill -f "/data/moloch/elasticsearch-0"
 
 
 #sudo git clone https://github.com/EmergingThreats/cuckoo-1.1.git /data/cuckoo
-sudo git clone https://github.com/wmetcalf/cuckoo-modified /data/cuckoo
+git clone https://github.com/wmetcalf/cuckoo-modified cuckoo
 cd cuckoo/utils
 ./community.py -a -f
 cd ../..
+sudo mv cuckoo /data/cuckoo
 
 rm suricata-2.0.7 -Rf
 rm pulledpork-0.6.1 -Rf
@@ -159,6 +160,9 @@ sudo rm volatility-2.4 -Rf
 rm pydeep -Rf
 sudo rm moloch-0.11.3 -Rf
 rm pp.config
+sudo rm luazip-1.2.4-1.rockspec
+sudo rm luazip-1.2.4-1 -Rf
+sudo rm pefile-1.2.10-139 -Rf
  
 sudo ovs-vsctl add-br lan0
 for tap in `seq 0 4`; do
