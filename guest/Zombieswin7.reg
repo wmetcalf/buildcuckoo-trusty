@@ -55,7 +55,7 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\TCPIP]
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\TCPIP\v6Transition]
-"Teredo_State"="D
+"Teredo_State"="Disable"
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
 "EnableLUA"=dword:00000000
