@@ -15,7 +15,7 @@ case "$1" in
     su cuckoo -c "cd /data/moloch/bin/ && screen -d -m ./run_viewer.sh"
 ;;
   stop)
-    pkill -f "elasticsearch-0.90.10.jar"
+    pkill -f "elasticsearch-"
     pkill -f "/data/moloch/bin/node viewer.js -c /data/moloch/etc/config.ini" 
 ;;
 
