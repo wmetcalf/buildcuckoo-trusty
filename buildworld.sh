@@ -1,6 +1,6 @@
 #!/bin/sh
 sudo apt-get update -y && sudo apt-get upgrade -y
-sudo apt-get install -y vim screen unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev libswitch-perl libcdio-utils mongodb-server python-simplejson p7zip-full libzzip-dev python-geoip python-chardet python-m2crypto python-dnspython lua-bitop lua-zlib 
+sudo apt-get install -y vim screen unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev libswitch-perl libcdio-utils mongodb-server python-simplejson p7zip-full libzzip-dev python-geoip python-chardet python-m2crypto python-dnspython lua-bitop lua-zlib libcap2-bin zram-config 
 
 sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump
 sudo pip install bottle django pycrypto clamd distorm3 pygal django-ratelimit 
@@ -211,6 +211,7 @@ sudo ip route add 192.168.1.0/24 dev lan0hp0
 
 /etc/init.d/moloch start
 /etc/init.d/cuckoo start
+setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump
 exit 0" | sudo tee /etc/rc.local
 
 CURRENT_USER=`whoami`
