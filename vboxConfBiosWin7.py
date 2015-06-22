@@ -219,15 +219,16 @@ except Exception:
   print json.dumps(dmi, sort_keys=True, indent=4, separators=(',', ': '))  
  
 
-# Globals, of sorts  
-DSDT_BIN="/data/dsdt.bin"  
-VBoxManage = '/usr/bin/VBoxManage'  
   
- # Get the DSDT   
-if not os.path.exists(DSDT_BIN):  
-    runcmd(['sudo','dd','if=/sys/firmware/acpi/tables/DSDT','of=%s' % DSDT_BIN])  
+for target in sys.argv[1:]:
+  # Globals, of sorts  
+  DSDT_BIN="/data/%sdsdt.bin" % (target)
+  VBoxManage = '/usr/bin/VBoxManage'
+
+  # Get the DSDT   
+  if not os.path.exists(DSDT_BIN):
+    runcmd(['sudo','dd','if=/sys/firmware/acpi/tables/DSDT','of=%s' % DSDT_BIN])
   
-for target in sys.argv[1:]:  
   # Configure all the virtual BIOS setings  
   for key, value in dmi.iteritems():  
     runcmd([VBoxManage,"setextradata",target,"VBoxInternal/Devices/pcbios/0/Config/" + key,value])  
@@ -248,4 +249,5 @@ for target in sys.argv[1:]:
   cd = getcd()
   for key, value in cd.iteritems():
     runcmd([VBoxManage,"setextradata",target,"VBoxInternal/Devices/piix3ide/0/Config/PrimaryMaster/" + key,value])
- 
+  runcmd([VBoxManage,"setextradata",target,"VBoxInternal/Devices/pcbios/0/Config/DmiOEMVBoxVer","<EMPTY>"])
+  runcmd([VBoxManage,"setextradata",target,"VBoxInternal/Devices/pcbios/0/Config/DmiOEMVBoxRev","<EMPTY>"])
