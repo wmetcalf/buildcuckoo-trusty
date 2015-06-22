@@ -362,3 +362,5 @@ rule-files:
  - all.rules
  - luajit.rules
  - local.rules
+ - dyndns-http-alert-and-drop.rules 
+ - dyndns-dns.rules

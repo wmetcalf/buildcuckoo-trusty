@@ -1,9 +1,9 @@
 #!/bin/sh
 sudo apt-get update -y && sudo apt-get upgrade -y
-sudo apt-get install -y vim screen unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev libswitch-perl libcdio-utils mongodb-server python-simplejson p7zip-full libzzip-dev python-geoip python-chardet python-m2crypto lua-bitop 
+sudo apt-get install -y vim screen unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev libswitch-perl libcdio-utils mongodb-server python-simplejson p7zip-full libzzip-dev python-geoip python-chardet python-m2crypto python-dnspython lua-bitop lua-zlib 
 
 sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump
-sudo pip install bottle django pycrypto clamd distorm3 pygal 
+sudo pip install bottle django pycrypto clamd distorm3 pygal django-ratelimit 
 sudo luarocks install struct
 sudo luarocks install lua-apr
 
@@ -15,8 +15,8 @@ sudo python setup.py install
 cd ..
 
 #yara
-tar -zxf v3.3.0.tar.gz
-cd yara-3.3.0
+tar -zxf v3.4.0.tar.gz
+cd yara-3.4.0
 ./bootstrap.sh
 chmod +x build.sh
 ./build.sh
@@ -54,13 +54,6 @@ sudo mkdir -p /usr/local/suricata/var/log
 sudo mkdir -p /usr/local/suricata/var/run/suricata/
 sudo mkdir -p /data/etc/
 sudo apt-get install build-essential libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev  libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev luarocks cmake openvswitch-switch libaprutil1-dev libaprutil1-dbd-sqlite3 libapreq2-3 libapreq2-dev liblua5.1-0 liblua5.1-0-dev libapr1 libaprutil1 libaprutil1-dev libaprutil1-dbd-sqlite3 libapreq2-3 libapreq2-dev xrdp python-sqlalchemy -y 
-
-mkdir lua-zlib
-cd lua-zlib
-git clone https://github.com/brimworks/lua-zlib.git
-cmake lua-zlib
-sudo make install
-cd ..
 
 git clone https://github.com/mkottman/ltn12ce
 cd ltn12ce
@@ -123,6 +116,8 @@ sudo cp -f pulledpork.pl /usr/local/bin/
 echo "#!/bin/sh
 /usr/local/bin/pulledpork.pl -c /usr/local/suricata/etc/pp.config
 cd /usr/local/suricata/et-luajit-scripts/ && git pull
+cp -f /usr/local/suricata/et-luajit-scripts/*.lua /usr/local/suricata/etc/
+cp -f /usr/local/suricata/et-luajit-scripts/d*.rules /usr/local/suricata/etc/
 " > ruleupdates.sh
 chmod +x ruleupdates.sh
 echo "pcre:SURICATA (STMP|IP|TCP|ICMP|HTTP|STREAM)" >> etc/disablesid.conf 
@@ -151,11 +146,11 @@ cd cuckoo/utils
 cd ../..
 sudo mv cuckoo /data/cuckoo
 
-rm suricata-2.0.7 -Rf
+rm suricata-2.0.8 -Rf
 rm pulledpork-0.6.1 -Rf
 rm lua-zlib -Rf
 rm ltn12ce -Rf
-rm yara-3.3.0 -Rf
+rm yara-3.4.0 -Rf
 sudo rm volatility-2.4 -Rf
 rm pydeep -Rf
 sudo rm moloch-0.11.3 -Rf
