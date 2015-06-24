@@ -75,8 +75,8 @@ cd ../..
 
 #wget http://www.openinfosecfoundation.org/download/suricata-2.0.7.tar.gz
 #wget https://raw.githubusercontent.com/wmetcalf/buildcuckoo-trusty/master/suricata.yaml
-tar -xzvf suricata-2.0.7.tar.gz
-cd suricata-2.0.7
+tar -xzvf suricata-2.0.8.tar.gz
+cd suricata-2.0.8
 ./configure --enable-profiling --prefix=/usr/local/suricata/ --with-libnss-includes=/usr/include/nss --with-libnss-libs=/usr/lib/nss --with-libnspr-includes=/usr/include/nspr --with-libnspr-libraries=/usr/lib/nspr --enable-lua --enable-unix-socket && make -j && sudo make install
 sudo cp ../suricata.yaml /usr/local/suricata/etc/
 sudo cp reference.config /usr/local/suricata/etc/
