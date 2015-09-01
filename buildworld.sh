@@ -130,13 +130,12 @@ sudo cp etc/disablesid.conf /usr/local/suricata/etc/
 cd ..
 ruleupdates.sh
 
-tar -xzvf v0.11.3.tar.gz
-cd moloch-0.11.3 
-patch -p1 < ../moloch-fixes.diff 
+tar -xzvf moloch.tar.gz
+cd moloch 
 sudo ./easybutton-singlehost.sh
 cd ..
 sudo pkill -f "/data/moloch/bin/node viewer.js"
-sudo pkill -f "/data/moloch/elasticsearch-0"
+sudo pkill -f "/data/moloch/elasticsearch"
 
 
 #sudo git clone https://github.com/EmergingThreats/cuckoo-1.1.git /data/cuckoo
@@ -153,7 +152,7 @@ rm ltn12ce -Rf
 rm yara-3.4.0 -Rf
 sudo rm volatility-2.4 -Rf
 rm pydeep -Rf
-sudo rm moloch-0.11.3 -Rf
+sudo rm moloch -Rf
 rm pp.config
 sudo rm luazip-1.2.4-1.rockspec
 sudo rm luazip-1.2.4-1 -Rf
