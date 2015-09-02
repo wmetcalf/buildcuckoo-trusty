@@ -55,6 +55,18 @@ sudo mkdir -p /usr/local/suricata/var/run/suricata/
 sudo mkdir -p /data/etc/
 sudo apt-get install build-essential libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev  libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev luarocks cmake openvswitch-switch libaprutil1-dev libaprutil1-dbd-sqlite3 libapreq2-3 libapreq2-dev liblua5.1-0 liblua5.1-0-dev libapr1 libaprutil1 libaprutil1-dev libaprutil1-dbd-sqlite3 libapreq2-3 libapreq2-dev xrdp python-sqlalchemy -y 
 
+tar -xzvf 2015-08-01.tar.gz
+cd re2-2015-08-01
+make
+make test
+sudo make install
+sudo make testinstall
+cd ..
+git clone https://github.com/axiak/pyre2.git
+cd pyre2
+sudo python setup.py install
+cd ..
+
 git clone https://github.com/mkottman/ltn12ce
 cd ltn12ce
 mkdir build
@@ -157,6 +169,8 @@ rm pp.config
 sudo rm luazip-1.2.4-1.rockspec
 sudo rm luazip-1.2.4-1 -Rf
 sudo rm pefile-1.2.10-139 -Rf
+sudo rm re2-2015-08-01 -Rf
+sudo rm pyre2 -Rf
  
 sudo ovs-vsctl add-br lan0
 for tap in `seq 0 4`; do
@@ -224,7 +238,7 @@ echo "/data/cuckoo/storage/** r," | sudo tee /etc/apparmor.d/local/usr.sbin.clam
 echo "deb http://download.virtualbox.org/virtualbox/debian trusty contrib" |sudo tee -a /etc/apt/sources.list
 wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
 sudo apt-get update
-sudo apt-get install virtualbox-4.3 -y
+sudo apt-get install virtualbox-5.0 -y
 
 echo xfce4-session > ~/.xsession
 sudo service xrdp restart
