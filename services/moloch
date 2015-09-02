@@ -13,10 +13,12 @@ case "$1" in
     su cuckoo -c "cd /data/moloch/bin/ && ./run_es.sh"
     sleep 15
     su cuckoo -c "cd /data/moloch/bin/ && screen -d -m ./run_viewer.sh"
+    su cuckoo -c "cd /data/moloch/bin/ && screen -d -m ./run_wise.sh"
 ;;
   stop)
     pkill -f "elasticsearch-"
-    pkill -f "/data/moloch/bin/node viewer.js -c /data/moloch/etc/config.ini" 
+    pkill -f "/data/moloch/bin/node viewer.js -c /data/moloch/etc/config.ini"
+    pkill -f "run_wise.sh" 
 ;;
 
  restart)
@@ -27,3 +29,4 @@ case "$1" in
 
 esac
 exit 0
+
