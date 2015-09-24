@@ -41,6 +41,7 @@ Windows Registry Editor Version 5.00
 "EnableDEP"=dword:00000000
 "DataConnectionWarnings"=dword:00000000
 "WorkbookLinkWarnings"=dword:00000002
+"ExtensionHardening"=dword:00000000
 
 [HKEY_CURRENT_USER\Software\Microsoft\Office\14.0\Excel\Security\FileBlock]
 "XL4Workbooks"=dword:00000000
