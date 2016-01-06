@@ -15,3 +15,5 @@ REM This value will differ based on your Hardware for DDST
 
 @reg add HKEY_LOCAL_MACHINE\HARDWARE\DESCRIPTION\System /v VideoBiosVersion /t REG_MULTI_SZ /d "VGA BIOS v1.14" /f
 @reg add HKEY_LOCAL_MACHINE\HARDWARE\DESCRIPTION\System /v SystemBiosDate /t  REG_SZ /d "05/05/12" /f
+
+netsh interface teredo set state disabled
