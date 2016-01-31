@@ -14,7 +14,7 @@ RTRIF="lan0p0"
 HOSTIF="lan0hp0"
 INTIF_IP="192.168.1.254"
 INTIF_NET="192.168.1.0/24"
-MGMTIF="eth0"
+MGMTIF="p118p1"
 LO="lo"
 LO_IP="127.0.0.1"
 
@@ -67,7 +67,7 @@ $IPTABLES -A INPUT -p tcp --dport 22 -i $MGMTIF -m state --state NEW -j ACCEPT
 #$IPTABLES -A INPUT -p tcp --dport 443 -i $EXTIF -m state --state NEW -j ACCEPT
 $IPTABLES -A INPUT -p tcp --dport 3389 -i $MGMTIF -m state --state NEW -j ACCEPT
 $IPTABLES -A INPUT -p tcp --dport 8080 -i $MGMTIF -m state --state NEW -j ACCEPT
-$IPTABLES -A INPUT -p tcp --dport 2042 -i $HOSTIF -m state --state NEW -j ACCEPT
+$IPTABLES -A INPUT -p tcp --dport 2042:2052 -i $HOSTIF -m state --state NEW -j ACCEPT
 $IPTABLES -A INPUT -p tcp --dport 443 -m state --state NEW -i $MGMTIF -j ACCEPT
 $IPTABLES -A INPUT -p tcp --dport 443 -m state --state NEW -i $EXTIF -j ACCEPT
 $IPTABLES -A INPUT -p tcp --dport 8005 -m state --state NEW -i $MGMTIF -j ACCEPT
@@ -84,7 +84,7 @@ $IPTABLES -A FORWARD -p TCP ! --syn -m state --state NEW -j DROP
 $IPTABLES -A FORWARD -p ALL -m state --state ESTABLISHED,RELATED -j LOG --log-level notice --log-prefix "(FORWARD-A) EST: "
 $IPTABLES -A FORWARD -p ALL -m state --state ESTABLISHED,RELATED -j ACCEPT
 $IPTABLES -A FORWARD -p ALL -i $ZOMBIEIF -o $RTRIF -j ACCEPT
-$IPTABLES -A FORWARD -p tcp -o $ZOMBIEIF --dport 2042 -j ACCEPT 
+$IPTABLES -A FORWARD -p tcp -o $ZOMBIEIF --dport 2042:2052 -j ACCEPT 
 $IPTABLES -A FORWARD -j LOG --log-level notice --log-prefix "FORWARD DROP: "
 
 ###############################################################################
