@@ -303,7 +303,7 @@ libhtp:
      # inspection limits
      request-body-minimal-inspect-size: 16kb
      request-body-inspect-window: 16kb
-     response-body-minimal-inspect-size: 1024kb
+     response-body-minimal-inspect-size: 40kb
      response-body-inspect-window: 32kb
 
 profiling:
@@ -364,3 +364,4 @@ rule-files:
  - local.rules
  - dyndns-http-alert-and-drop.rules 
  - dyndns-dns.rules
+ - dyndns-tls.rules

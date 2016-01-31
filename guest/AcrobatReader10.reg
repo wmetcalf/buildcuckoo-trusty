@@ -1,0 +1,10 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Adobe\Acrobat Reader\10.0\FeatureLockDown\cDefaultLaunchAttachmentPerms]
+"tBuiltInPermList"="version:1|.ade:2|.adp:2|.app:2|.arc:2|.arj:2|.asp:2|.bas:2|.bat:2|.bz:2|.bz2:2|.cab:2|.chm:2|.class:2|.cmd:2|.com:2|.command:2|.cpl:2|.crt:2|.csh:2|.desktop:2|.dll:2|.exe:2|.fxp:2|.gz:2|.hex:2|.hlp:2|.hqx:2|.hta:2|.inf:2|.ini:2|.ins:2|.isp:2|.its:2|.job:2|.js:2|.jse:2|.ksh:2|.lnk:2|.lzh:2|.mad:2|.maf:2|.mag:2|.mam:2|.maq:2|.mar:2|.mas:2|.mat:2|.mau:2|.mav:2|.maw:2|.mda:2|.mdb:2|.mde:2|.mdt:2|.mdw:2|.mdz:2|.msc:2|.msi:2|.msp:2|.mst:2|.ocx:2|.ops:2|.pcd:2|.pi:2|.pif:2|.prf:2|.prg:2|.pst:2|.rar:2|.reg:2|.scf:2|.scr:2|.sct:2|.sea:2|.shb:2|.shs:2|.sit:2|.tar:2|.taz:2|.tgz:2|.tmp:2|.url:2|.vb:2|.vbe:2|.vbs:2|.vsmacros:2|.vss:2|.vst:2|.vsw:2|.webloc:2|.ws:2|.wsc:2|.wsf:2|.wsh:2|.z:2|.zip:2|.zlo:2|.zoo:2|.pdf:2|.fdf:2|.jar:2|.pkg:2|.tool:2|.term:2|.doc:2|.dot:2|.ooxml:2|.docx:2|.docm:2|.dotx:2|.dotm:2|.docb:2|.xls:2|.xlt:2|.xlm:2|.xlsx:2|.xlsm:2|.xltx:2|.xltm:2|.xlsb:2|xla:2|.xlam:2|xll:2|.xlw:2|.ppt:2|.pot:2|.pps:2|.pptx:2|.pptm:2|.potx:2|.potm:2|.ppam:2|.ppsx:2|.ppsm:2|.sldx:2|.sldm:2|.accdb:2|.mdb:2|.accde:2|.accdt:2|.accdr:2|.pub:2"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Adobe\Acrobat Reader\10.0\FeatureLockDown\cDefaultLaunchURLPerms]
+"tSchemePerms"="version:1|shell:2|hcp:2|ms-help:2|ms-its:2|ms-itss:2|its:2|mk:2|mhtml:2|help:2|disk:2|afp:2|disks:2|telnet:2|ssh:2|acrobat:2|mailto:2|file:1|rlogin:2"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Adobe\Adobe Reader\10.0\FeatureLockDown]
+"bProtectedMode"=dword:00000000
