@@ -17,7 +17,7 @@ case "$1" in
 ;;
   stop)
     pkill -f "elasticsearch-"
-    pkill -f "/data/moloch/bin/node viewer.js -c /data/moloch/etc/config.ini"
+    pkill -f "viewer.js"
     pkill -f "run_wise.sh" 
 ;;
 
