@@ -1,6 +1,6 @@
 #!/bin/sh
 sudo apt-get update -y && sudo apt-get upgrade -y
-sudo apt-get install -y vim screen unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev libswitch-perl libcdio-utils mongodb-server python-simplejson p7zip-full libzzip-dev python-geoip python-chardet python-m2crypto python-dnspython lua-bitop lua-zlib libcap2-bin zram-config xfce4 python-pil libidn11-dev libtommath-dev libjson-c-dev libjson-c-dev libmilter1.0.1 python-dateutil lua-apr python-pyparsing 
+sudo apt-get install -y vim screen unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev libswitch-perl libcdio-utils mongodb-server python-simplejson p7zip-full libzzip-dev python-geoip python-chardet python-m2crypto python-dnspython lua-bitop lua-zlib libcap2-bin zram-config xfce4 python-pil libidn11-dev libtommath-dev libjson-c-dev libjson-c-dev libmilter1.0.1 python-dateutil lua-apr python-pyparsing libbz2-dev 
 
 sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump
 sudo pip install bottle Django==1.8.8 pycrypto clamd distorm3 pygal django-ratelimit 
@@ -91,7 +91,6 @@ cd luazip-1.2.4-1/luazip
 sudo luarocks make luazip-1.2.4-1.rockspec
 cd ../..
 
-sudo dpkg -i *clamav*.deb
 #sudo apt-get install apache2 libapache2-mod-wsgi
 #sudo a2enmod wsgi
 #sudo a2enmod ssl
@@ -244,9 +243,6 @@ sudo ip route add 192.168.1.0/24 dev lan0hp0
 setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump
 exit 0" | sudo tee /etc/rc.local
 
-echo "add_dbs=\"https://raw.githubusercontent.com/wmetcalf/clam-punch/master/miscreantpunch099.ldb\"" |sudo tee -a /usr/share/clamav-unofficial-sigs/conf.d/00-clamav-unofficial-sigs.conf
-sudo -u clamav /usr/sbin/clamav-unofficial-sigs
-
 CURRENT_USER=`whoami`
 sudo chown $CURRENT_USER:$CURRENT_USER /usr/local/suricata/ -Rf
 sudo chown $CURRENT_USER:$CURRENT_USER /data/moloch -Rf
@@ -259,6 +255,11 @@ echo "deb http://download.virtualbox.org/virtualbox/debian trusty contrib" |sudo
 wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
 sudo apt-get update
 sudo apt-get install virtualbox-5.0 -y
+
+sudo dpkg -i *clamav*.deb
+sudo apt-get -f install
+echo "add_dbs=\"https://raw.githubusercontent.com/wmetcalf/clam-punch/master/miscreantpunch099.ldb\"" |sudo tee -a /usr/share/clamav-unofficial-sigs/conf.d/00-clamav-unofficial-sigs.conf
+sudo -u clamav /usr/sbin/clamav-unofficial-sigs
 
 echo xfce4-session > ~/.xsession
 sudo service xrdp restart

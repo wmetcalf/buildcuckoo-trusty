@@ -56,7 +56,10 @@ ar2=[]
 sp=list(chunkstring(options.cpu,4))
 for e in sp:
     ar2.append(e[::-1].encode("hex"))
-print len(ar2)
+print "running twice because of weirdness"
+cmd_wrapper("VBoxManage modifyvm \"%s\" --cpuidset 80000002 %s %s %s %s" % (options.vm,ar2[0],ar2[1],ar2[2],ar2[3]))
+cmd_wrapper("VBoxManage modifyvm \"%s\" --cpuidset 80000003 %s %s %s %s" % (options.vm,ar2[4],ar2[5],ar2[6],ar2[7]))
+cmd_wrapper("VBoxManage modifyvm \"%s\" --cpuidset 80000004 %s %s %s %s" % (options.vm,ar2[8],ar2[9],ar2[10],ar2[11]))
 cmd_wrapper("VBoxManage modifyvm \"%s\" --cpuidset 80000002 %s %s %s %s" % (options.vm,ar2[0],ar2[1],ar2[2],ar2[3]))
 cmd_wrapper("VBoxManage modifyvm \"%s\" --cpuidset 80000003 %s %s %s %s" % (options.vm,ar2[4],ar2[5],ar2[6],ar2[7]))
 cmd_wrapper("VBoxManage modifyvm \"%s\" --cpuidset 80000004 %s %s %s %s" % (options.vm,ar2[8],ar2[9],ar2[10],ar2[11]))
