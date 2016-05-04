@@ -1,0 +1,1 @@
+alert http any any -> any any (msg:"FILE store all"; filestore; flowbits:noalert; sid:44444; rev:1;)

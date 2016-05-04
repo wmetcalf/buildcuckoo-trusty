@@ -11,7 +11,7 @@
 case "$1" in
   start)
     #/etc/init.d/openvswitch-switch restart
-    su cuckoo -c "/usr/local/suricata/bin/suricata -c /usr/local/suricata/etc/suricata.yaml --unix-socket -D"
+    su cuckoo -c "/usr/local/suricata/bin/suricata -c /usr/local/suricata/etc/suricata.yaml --set mpm-algo=hs --unix-socket -D"
 ;;
   stop)
     kill `cat /usr/local/suricata/var/run/suricata.pid`

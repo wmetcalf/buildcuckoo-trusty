@@ -1,6 +1,10 @@
 #!/bin/sh
 sudo apt-get update -y && sudo apt-get upgrade -y
-sudo apt-get install -y vim screen unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev libswitch-perl libcdio-utils mongodb-server python-simplejson p7zip-full libzzip-dev python-geoip python-chardet python-m2crypto python-dnspython lua-bitop lua-zlib libcap2-bin zram-config xfce4 python-pil libidn11-dev libtommath-dev libjson-c-dev libjson-c-dev libmilter1.0.1 python-dateutil lua-apr python-pyparsing libbz2-dev 
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
+echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+sudo apt-get install -y vim screen unzip python python-dpkt python-jinja2 python-magic python-pymongo python-gridfs python-libvirt python-bottle python-chardet tcpdump clamav-daemon clamav-unofficial-sigs clamav clamav-base libcap2-bin python-dev build-essential subversion pcregrep libpcre++-dev python-pip ssdeep libfuzzy-dev git automake libtool autoconf libapr1 libapr1-dev libnspr4-dev libnss3-dev libwww-Perl libcrypt-ssleay-perl python-dev python-scapy python-yaml bison libpcre3-dev bison flex libdumbnet-dev autotools-dev libnet1-dev libpcap-dev libyaml-dev libnetfilter-queue-dev libprelude-dev zlib1g-dev libz-dev libcap-ng-dev libmagic-dev python-mysqldb lua-zip-dev lua-zip luarocks cmake libjansson-dev libswitch-perl libcdio-utils python-simplejson p7zip-full libzzip-dev python-geoip python-chardet python-m2crypto python-dnspython lua-bitop lua-zlib libcap2-bin zram-config xfce4 python-pil libidn11-dev libtommath-dev libjson-c-dev libjson-c-dev libmilter1.0.1 python-dateutil lua-apr python-pyparsing libbz2-dev cmake ragel 
 
 sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump
 sudo pip install bottle Django==1.8.8 pycrypto clamd distorm3 pygal django-ratelimit 
@@ -91,6 +95,22 @@ cd luazip-1.2.4-1/luazip
 sudo luarocks make luazip-1.2.4-1.rockspec
 cd ../..
 
+tar -xvzf boost_1_60_0.tar.gz
+cd boost_1_60_0
+./bootstrap.sh --prefix=/tmp/boost-1.60
+./b2 install
+cd ..
+
+tar -xzvf hyperscan.tar.gz
+cd hyperscan
+git checkout v4.0.1 -b ver401
+mkdir build
+cd build
+cmake -DBUILD_SHARED_LIBS=1 -DBOOST_ROOT=/tmp/boost-1.60 ../
+make
+sudo make install
+cd ../..
+
 #sudo apt-get install apache2 libapache2-mod-wsgi
 #sudo a2enmod wsgi
 #sudo a2enmod ssl
@@ -99,10 +119,10 @@ cd ../..
 #sudo a2enmod auth_basic
 #sudo a2enmod headers
 
-#wget http://www.openinfosecfoundation.org/download/suricata-3.0.tar.gz
+#wget http://www.openinfosecfoundation.org/download/suricata-3.0.1.tar.gz
 #wget https://raw.githubusercontent.com/wmetcalf/buildcuckoo-trusty/master/suricata.yaml
-tar -xzvf suricata-3.0.tar.gz
-cd suricata-3.0
+tar -xzvf suricata-3.0.1.tar.gz
+cd suricata-3.0.1
 ./configure --enable-profiling --prefix=/usr/local/suricata/ --with-libnss-includes=/usr/include/nss --with-libnss-libs=/usr/lib/nss --with-libnspr-includes=/usr/include/nspr --with-libnspr-libraries=/usr/lib/nspr --enable-lua --enable-unix-socket && make -j && sudo make install
 sudo cp ../suricata.yaml /usr/local/suricata/etc/
 sudo cp reference.config /usr/local/suricata/etc/
@@ -165,14 +185,14 @@ sudo pkill -f "/data/moloch/elasticsearch"
 
 
 #sudo git clone https://github.com/EmergingThreats/cuckoo-1.1.git /data/cuckoo
-git clone https://github.com/wmetcalf/cuckoo-modified cuckoo
+git clone https://github.com/spender-sandbox/cuckoo-modified cuckoo 
 cd cuckoo/utils
 ./community.py -a -f
 cd ../..
 sudo mv cuckoo /data/cuckoo
 sudo cp procyon-decompiler-0.5.30.jar /data/cuckoo/
  
-rm suricata-3.0 -Rf
+rm suricata-3.0.1 -Rf
 rm pulledpork-0.6.1 -Rf
 rm lua-zlib -Rf
 rm ltn12ce -Rf
@@ -187,17 +207,19 @@ sudo rm pefile-1.2.10-139 -Rf
 sudo rm re2-2015-08-01 -Rf
 sudo rm pyre2 -Rf
 sudo rm aeslua -Rf
- 
+sudo rm hyperscan -Rf
+sudo rm /tmp/boost-1.60 -Rf
+sudo rm boost_1_60_0 -Rf
 sudo ovs-vsctl add-br lan0
-for tap in `seq 0 4`; do
+for tap in `seq 0 16`; do
         sudo ip tuntap add mode tap lan0p$tap
 done;
 sudo ip tuntap list
-for tap in `seq 0 4`; do
+for tap in `seq 0 16`; do
         sudo ip link set lan0p$tap up
 done;
 sudo ip link
-for tap in `seq 0 4`; do
+for tap in `seq 0 16`; do
        sudo ovs-vsctl add-port lan0 lan0p$tap
 done;
 sudo ovs-vsctl list-ports lan0
@@ -220,11 +242,11 @@ sudo update-rc.d iptables defaults
 sudo update-rc.d suricata defaults
 
 echo "service /etc/init.d/openvswitch-switch restart
-for tap in \`seq 0 4\`; do
+for tap in \`seq 0 16\`; do
  sudo ip tuntap add mode tap lan0p\$tap
 done;
 sudo ip tuntap list
-for tap in \`seq 0 4\`; do
+for tap in \`seq 0 16\`; do
   sudo ip link set lan0p\$tap up
 done;
 sudo ip link
