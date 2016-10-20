@@ -47,8 +47,12 @@
 "AutoCompleteGroups"=dword:00000000    
 "EnabledScopes"=dword:00000000
 
+[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\DomainSuggestion]
+"Enabled"=dword:00000000
+
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\AutoComplete]
 "AutoSuggest"="no"
+
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient]
 "EnableMulticast"=dword:00000000
 
